@@ -10,8 +10,8 @@ let package = Package(
       .executable(name: "SwiftPlotViewTest", targets: ["SwiftPlotViewTest"])
     ],
     dependencies: [
-        //        .package(url: "https://github.com/karwa/swiftplot.git", .branch("dev")),
-        .package(path: "/Volumes/Code/swiftplot")
+                .package(url: "https://github.com/karwa/swiftplot.git", .branch("dev")),
+//        .package(path: "/Volumes/Code/swiftplot")
     ],
     targets: [
         .target(
