@@ -6,7 +6,10 @@ import QuartzRenderer
 import AppKit
 public class PlotNSView: NSView {
     public var plot: Plot? {
-        didSet { setNeedsDisplay(bounds) }
+        didSet { refreshPlot() }
+    }
+    public func refreshPlot() {
+        setNeedsDisplay(bounds)
     }
     override public func draw(_ dirtyRect: NSRect) {
         guard let plot = plot else { return }
@@ -18,14 +21,19 @@ public class PlotNSView: NSView {
 #endif
 
 // SwiftPlot - UIKit bridge.
-#if canImport(UIKit)
+#if canImport(UIKit) && !os(watchOS) // watchOS UIKit doesn't have UIView.
+import UIKit
 public class PlotUIView: UIView {
     public var plot: Plot? {
-        didSet { setNeedsDisplay(bounds) }
+        didSet { refreshPlot() }
+    }
+    public func refreshPlot() {
+        setNeedsDisplay(bounds)
     }
     public override func draw(_ rect: CGRect) {
         guard let plot = plot else { return }
         let size = Size(bounds.size)
+        // The specific CGContexts we get from UIKit are vertically flipped.
         let ctx = UIGraphicsGetCurrentContext()!
         let transform = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: CGFloat(size.height))
         ctx.concatenate(transform)
@@ -77,7 +85,7 @@ extension PlotView: NSViewRepresentable {
 #endif
 
 // SwiftUI - UIKit bridge.
-#if canImport(UIKit)
+#if canImport(UIKit) && !os(watchOS)
 extension PlotView: UIViewRepresentable {
     public func makeUIView(context: Context) -> PlotUIView {
         let view = PlotUIView()
@@ -86,6 +94,20 @@ extension PlotView: UIViewRepresentable {
     }
     public func updateUIView(_ uiView: PlotUIView, context: Context) {
         uiView.plot = box.plot
+    }
+}
+#endif
+
+// SwiftUI fallback implementation.
+#if os(watchOS)
+@available(watchOS 13, *)
+extension PlotView: View {
+    public var body: some View {
+        GeometryReader { proxy -> Image in
+            let renderer = QuartzRenderer(size: Size(proxy.size))
+            _ = self.box.plot?.drawGraph(size: renderer.imageSize, renderer: renderer)
+            return Image(renderer.makeCGImage()!, scale: 1, label: Text(""))
+        }
     }
 }
 #endif
