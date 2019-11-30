@@ -36,6 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 import SwiftPlot
 import SwiftUI
+import SwiftPlotViews
 
 struct DemoView: View {
     @State private var values = [Int]()
