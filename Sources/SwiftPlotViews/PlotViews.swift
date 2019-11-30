@@ -100,7 +100,7 @@ extension PlotView: UIViewRepresentable {
 
 // SwiftUI fallback implementation.
 #if os(watchOS)
-@available(watchOS 13, *)
+@available(watchOS 6.0, *)
 extension PlotView: View {
     public var body: some View {
         GeometryReader { proxy -> Image in
