@@ -9,7 +9,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let window = NSWindow()
     let windowDelegate = WindowDelegate()
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let contentSize = NSSize(width:800, height:200)
+        let contentSize = NSSize(width:800, height:600)
         window.setContentSize(contentSize)
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.level = .floating
@@ -50,22 +50,22 @@ struct DemoView: View {
     var body: some View {
         VStack {
             HStack {
-                Button("Update") { self.advanceGraph() }
+                Text("SwiftPlot meets SwiftUI").font(.headline).colorScheme(.dark)
             }.padding(10)
-//            PlotView { [demo_lineGraph, demo_gridPlots] }
-//                .padding(20)
-//                .shadow(color: .black, radius: 0, x: -1, y: 1)
-//                .background(Color.blue)
-            PlotView {
-                let plot = LineGraph<Float, Float>()
-                plot.enablePrimaryAxisGrid = true
-                plot.addSeries(values.reversed().map { Float($0) }, label: "", color: .red)
-                plot.plotTitle.title = "Network congestion"
-//                plot.plotLabel.xLabel = "seconds elapsed"
-//                plot.plotLabel.yLabel = "loss"
-                return plot
-            }.onReceive(timer) { _ in
-                self.advanceGraph()
+            List {
+                PlotView { demo_lineGraph }
+                    .background(Color.white)
+                    .frame(height: 400)
+                PlotView { demo_gridPlots }
+                    .frame(height: 600)
+                PlotView {
+                    let plot = LineGraph<Float, Float>()
+                    plot.enablePrimaryAxisGrid = true
+                    plot.addSeries(values.reversed().map { Float($0) }, label: "", color: .red)
+                    plot.plotTitle.title = "Network congestion"
+                    return plot
+                }.frame(height: 150)
+                    .onReceive(timer) { _ in self.advanceGraph() }
             }
         }
     }

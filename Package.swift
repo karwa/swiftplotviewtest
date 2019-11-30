@@ -5,17 +5,17 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftPlotViewTest",
-    platforms: [.macOS("10.15")],
+    platforms: [.macOS("10.15"), .iOS("13"), .tvOS("13"), .watchOS("13")],
     products: [
       .executable(name: "SwiftPlotViewTest", targets: ["SwiftPlotViewTest"])
     ],
     dependencies: [
-        .package(url: "https://github.com/karwa/swiftplot.git", .branch("dev")),
-//        .package(path: "/Volumes/Code/swiftplot")
+        //        .package(url: "https://github.com/karwa/swiftplot.git", .branch("dev")),
+        .package(path: "/Volumes/Code/swiftplot")
     ],
     targets: [
         .target(
             name: "SwiftPlotViewTest",
-            dependencies: ["SwiftPlot", "QuartzRenderer", "AGGRenderer", "SVGRenderer"]),
+            dependencies: ["SwiftPlot", "QuartzRenderer"]),
     ]
 )
