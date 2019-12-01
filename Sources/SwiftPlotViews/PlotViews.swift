@@ -4,10 +4,13 @@ import QuartzRenderer
 // SwiftPlot - AppKit bridge.
 #if canImport(AppKit)
 import AppKit
+/// A view which displays a SwiftPlot plot.
 public class PlotNSView: NSView {
+    /// The Plot being displayed by this view.
     public var plot: Plot? {
         didSet { refreshPlot() }
     }
+    /// Calling this method triggers the receiver to re-draw its plot.
     public func refreshPlot() {
         setNeedsDisplay(bounds)
     }
@@ -23,10 +26,21 @@ public class PlotNSView: NSView {
 // SwiftPlot - UIKit bridge.
 #if canImport(UIKit) && !os(watchOS) // watchOS UIKit doesn't have UIView.
 import UIKit
+/// A view which displays a SwiftPlot plot.
 public class PlotUIView: UIView {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.isOpaque = false
+    }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.isOpaque = false
+    }
+    /// The Plot being displayed by this view.
     public var plot: Plot? {
         didSet { refreshPlot() }
     }
+    /// Calling this method triggers the receiver to re-draw its plot.
     public func refreshPlot() {
         setNeedsDisplay(bounds)
     }
@@ -46,7 +60,7 @@ public class PlotUIView: UIView {
 // SwiftPlot - SwiftUI bridge.
 #if canImport(SwiftUI)
 import SwiftUI
-
+/// A view which displays a SwiftPlot plot.
 public struct PlotView {
     // TODO: Is there a cleaner way to do this?
     // We want setting a new Plot to invalidate the view.
